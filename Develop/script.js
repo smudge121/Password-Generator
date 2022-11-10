@@ -1,51 +1,76 @@
 // Assignment code here
 var criteria = {
-  minChar:0,
-  maxChar:0,
+  charLength:0,
   lower: false,
   upper: false,
   numeric: false,
   special: false,
 }
 
+var numbers = "0123456789";
+var lower = "abcdefghijklmnopqrstuvwxyz";
+var upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+var special = " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"  // Use backslash as escape character
+
+
 function generatePassword()
 {
-  criteria.minChar = prompt("Minimum Character Length? Choose atleast 8");
-  if (minMaxCheck(true, criteria.minChar))
+  criteria.charLength = prompt("How many characters in the password?");
+  if (!minMaxCheck())
   {
-
+    repeatNumPrompt();
   }
-  criteria.maxChar = prompt("Maximum Character Length? No more than 128");
-  if (minMaxCheck(false, criteria.maxChar))
+  criteria.lower = confirm("Select Ok if your password can contain lower case characters.");
+  criteria.upper = confirm("Select Ok if your password can contain upper case characters?");
+  criteria.numeric = confirm("Select Ok if your password can contain Numeric characters?");
+  criteria.special = confirm("Select Ok if your password can contain special characters?");
+  if (!charCheck())
   {
-
+    repeatCharPrompt();
   }
-  criteria.lower = confirm("New Password to contain lower case characters?");
-  criteria.upper = confirm("New Password to contain upper case characters?");
-  criteria.numeric = confirm("New Password to contain Numeric characters?");
-  criteria.special = confirm("New Password to contain special characters?");
+
+
+  return "temp";
 }
 
-function minMaxCheck(isMin, value)
+function repeatNumPrompt()
 {
-  if (isMin)
+  criteria.charLength = prompt("Sorry, character length must be between 8 and 128. Insert again.");
+  if (!minMaxCheck())
   {
-    if (value < 8)
-      return false;
-    else
-      return true;
+    repeatNumPrompt();
   }
+}
+function repeatCharPrompt()
+{
+  alert("No valid characters were selected, please select again.");
+  criteria.lower = confirm("Select Ok if your password can contain lower case characters.");
+  criteria.upper = confirm("Select Ok if your password can contain upper case characters?");
+  criteria.numeric = confirm("Select Ok if your password can contain Numeric characters?");
+  criteria.special = confirm("Select Ok if your password can contain special characters?");
+  if (!charCheck())
+  {
+    repeatCharPrompt();
+  }
+}
+
+function minMaxCheck()
+{
+  if (criteria.charLength < 8 || criteria.charLength > 128)
+    return false;
   else
-  {
-    if (value > 128)
-      return false;
-    else
-      return true;
-  }
+    return true;
 }
 function charCheck()
 {
-
+  if (!criteria.lower && !criteria.upper && !criteria.numeric && !criteria.special)
+  {
+    return false;
+  }
+  else
+  {
+    return true;
+  }
 }
 
 // Get references to the #generate element
