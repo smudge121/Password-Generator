@@ -12,16 +12,20 @@ var lower = "abcdefghijklmnopqrstuvwxyz";
 var upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 var special = " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"  // Use backslash as escape character
 
-
+// Function called when button is selected by user
 function generatePassword()
 {
   criteria.charLength = prompt("How many characters in the password?");
   if (!minMaxCheck())
   {
-    repeatNumPrompt();
+    repeatNumPrompt(false);
   }
+  if (!isNumCheck())
+  {
+    repeatNumPrompt(true);
+  }
+  
   criteria.lower = confirm("Select Ok if your password can contain lower case characters.");
-  console.log("criteria check: "+ criteria.lower);
   criteria.upper = confirm("Select Ok if your password can contain upper case characters.");
   criteria.numeric = confirm("Select Ok if your password can contain Numeric characters.");
   criteria.special = confirm("Select Ok if your password can contain special characters.");
@@ -34,6 +38,7 @@ function generatePassword()
   return charSelect();
 }
 
+// function that randomly generates the new password
 function charSelect()
 {
   var password = '';
@@ -48,24 +53,43 @@ function charSelect()
   if (criteria.special)
     base += special;
 
-  console.log(base);
   for (var i=0; i<criteria.charLength; i++)
   {
     password += base[Math.floor(Math.random() * base.length) ];
   }
-  console.log("test :" + password);
   return password;
 }
 
-
-function repeatNumPrompt()
+// function to be called if user inputs a faulty character length
+function repeatNumPrompt(isLetter)
 {
-  criteria.charLength = prompt("Sorry, character length must be between 8 and 128. Insert again.");
-  if (!minMaxCheck())
+  if (!isLetter)
   {
-    repeatNumPrompt();
+    criteria.charLength = prompt("Sorry, character length must be between 8 and 128. Insert again.");
+    if (!minMaxCheck())
+    {
+     repeatNumPrompt(false);
+    }
+    if (!isNumCheck())
+    {
+      repeatNumPrompt(true);
+    }
   }
+  else if (isLetter)
+  {
+    criteria.charLength = prompt("Length can only contain numbers. Please insert a number between 8 and 128.");
+    if (!minMaxCheck())
+    {
+     repeatNumPrompt(false);
+    }
+    if (!isNumCheck())
+    {
+      repeatNumPrompt(true);
+    }
+  }
+  
 }
+// function to be called if user does not select any character types
 function repeatCharPrompt()
 {
   alert("No valid characters were selected, please select again.");
@@ -79,6 +103,18 @@ function repeatCharPrompt()
   }
 }
 
+// checks if submitted value is a number, returns false if the check is failed
+function isNumCheck()
+{
+  for (var i = 0; i < criteria.charLength.length; i++)
+  {
+    if (!numbers.includes(criteria.charLength[i]))
+      return false;
+  }
+  return true;
+}
+
+// checks if submitted number is within given range, returns false if the check is failed
 function minMaxCheck()
 {
   if (criteria.charLength < 8 || criteria.charLength > 128)
@@ -86,6 +122,8 @@ function minMaxCheck()
   else
     return true;
 }
+
+// checks if atleast one character type was given by user
 function charCheck()
 {
   if (!criteria.lower && !criteria.upper && !criteria.numeric && !criteria.special)
@@ -97,6 +135,8 @@ function charCheck()
     return true;
   }
 }
+
+////////////////////////
 
 // Get references to the #generate element
 var generateBtn = document.querySelector("#generate");
