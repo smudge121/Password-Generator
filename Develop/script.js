@@ -21,17 +21,42 @@ function generatePassword()
     repeatNumPrompt();
   }
   criteria.lower = confirm("Select Ok if your password can contain lower case characters.");
-  criteria.upper = confirm("Select Ok if your password can contain upper case characters?");
-  criteria.numeric = confirm("Select Ok if your password can contain Numeric characters?");
-  criteria.special = confirm("Select Ok if your password can contain special characters?");
+  console.log("criteria check: "+ criteria.lower);
+  criteria.upper = confirm("Select Ok if your password can contain upper case characters.");
+  criteria.numeric = confirm("Select Ok if your password can contain Numeric characters.");
+  criteria.special = confirm("Select Ok if your password can contain special characters.");
   if (!charCheck())
   {
     repeatCharPrompt();
   }
 
 
-  return "temp";
+  return charSelect();
 }
+
+function charSelect()
+{
+  var password = '';
+  var base = '';
+
+  if (criteria.lower)
+    base += lower;
+  if (criteria.upper)
+    base += upper;
+  if (criteria.numeric)
+    base += numbers;
+  if (criteria.special)
+    base += special;
+
+  console.log(base);
+  for (var i=0; i<criteria.charLength; i++)
+  {
+    password += base[Math.floor(Math.random() * base.length) ];
+  }
+  console.log("test :" + password);
+  return password;
+}
+
 
 function repeatNumPrompt()
 {
